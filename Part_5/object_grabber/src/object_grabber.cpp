@@ -151,7 +151,8 @@ bool ObjectGrabber::get_default_grab_poses(int object_id,geometry_msgs::PoseStam
     ROS_INFO("there are %d depart options for this gripper/object combo; choosing 1st option (default)",n_depart_strategy_options);
 
     if (n_depart_strategy_options<1) return false;
-    int depart_option = manip_properties_srv_.response.grasp_strategy_options[0];
+    int opt = n_depart_strategy_options>1? 1:0; // Use lateral for grap depart if available, where idx 0 is tool-z direction, idx 1 is tool-x
+    int depart_option = manip_properties_srv_.response.grasp_strategy_options[opt];
     ROS_INFO("chosen depart strategy is code %d",depart_option);
     
     // Use depart option to find depart pose. 
@@ -294,13 +295,14 @@ bool ObjectGrabber::get_default_dropoff_poses(int object_id,geometry_msgs::PoseS
     int n_approach_strategy_options = manip_properties_srv_.response.grasp_strategy_options.size();
     ROS_INFO("there are %d approach options for this gripper/object combo; choosing 1st option (default)",n_approach_strategy_options);
     if (n_approach_strategy_options<1) return false;
-    int approach_option = manip_properties_srv_.response.grasp_strategy_options[0];
+    int opt = n_approach_strategy_options>1? 1:0; // Use gripper-lateral for drop off approach if available
+    int approach_option = manip_properties_srv_.response.grasp_strategy_options[opt];
     ROS_INFO("chosen approach strategy is code %d",approach_option);
     
     //use this grasp strategy for finding corresponding grasp pose
     manip_properties_srv_.request.grasp_option = approach_option; //default option for grasp strategy
     manip_properties_srv_.request.query_code = object_manipulation_properties::objectManipulationQueryRequest::GET_APPROACH_POSE_TRANSFORMS;
-     manip_properties_client_.call(manip_properties_srv_);
+    manip_properties_client_.call(manip_properties_srv_);
     int n_approach_pose_options = manip_properties_srv_.response.gripper_pose_options.size();
     if (n_approach_pose_options<1) {
                     ROS_WARN("no approach pose options returned for gripper_ID %d and object_ID %d",gripper_id_,object_id);
@@ -325,7 +327,7 @@ bool ObjectGrabber::get_default_dropoff_poses(int object_id,geometry_msgs::PoseS
     manip_properties_srv_.request.grasp_option = depart_option; //default option for grasp strategy    
     
     manip_properties_srv_.request.query_code = object_manipulation_properties::objectManipulationQueryRequest::GET_DEPART_POSE_TRANSFORMS;
-     manip_properties_client_.call(manip_properties_srv_);
+    manip_properties_client_.call(manip_properties_srv_);
     int n_depart_pose_options = manip_properties_srv_.response.gripper_pose_options.size();
     if (n_depart_pose_options<1) {
                     ROS_WARN("no depart pose options returned for gripper_ID %d and object_ID %d",gripper_id_,object_id);
@@ -564,7 +566,7 @@ void ObjectGrabber::executeCB(const actionlib::SimpleActionServer<object_grabber
             //cart_move_action_client_.sendGoal(cart_goal_, boost::bind(&ObjectGrabber::cartMoveDoneCb_, this, _1, _2));
             //ROS_INFO("return code: %d", cart_result_.return_code);
             break;
-
+            
         case object_grabber::object_grabberGoal::GRAB_OBJECT:
             ROS_INFO("GRAB_OBJECT: ");
             object_id = goal->object_id;
