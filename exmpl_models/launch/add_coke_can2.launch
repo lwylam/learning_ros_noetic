@@ -1,0 +1,3 @@
+<launch>
+<node name="spawn_coke_can2" pkg="gazebo_ros" type="spawn_model" args="-database coke_can -sdf -model coke_can2 -x -9.5 -y -0.7 -z 0.77" />
+</launch>
