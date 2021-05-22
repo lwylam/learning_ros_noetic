@@ -34,6 +34,7 @@ catkin_simple()
 cs_add_executable(example_gazebo_set_prism_state src/example_gazebo_set_prism_state.cpp)
 cs_add_executable(set_block_state src/set_block_state.cpp)
 cs_add_executable(reset_block_state src/reset_block_state.cpp)
+cs_add_executable(reset_coke_state src/reset_coke_state.cpp)
 
 #the following is required, if desire to link a node in this package with a library created in this same package
 # edit the arguments to reference the named node and named library within this package
