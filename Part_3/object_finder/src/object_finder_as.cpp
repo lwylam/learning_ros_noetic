@@ -56,17 +56,30 @@ object_finder_as_(nh_, "object_finder_action_service", boost::bind(&ObjectFinder
 //specialized function: DUMMY...JUST RETURN A HARD-CODED POSE; FIX THIS
 
 bool ObjectFinder::find_upright_coke_can(float surface_height, geometry_msgs::PoseStamped &object_pose) {
-    bool found_object = true;
-    object_pose.header.frame_id = "world";
-    object_pose.pose.position.x = 0.680;
-    object_pose.pose.position.y = -0.205;
-    object_pose.pose.position.z = surface_height;
+    Eigen::Vector3f plane_normal;
+    double plane_dist;
+    Eigen::Vector3f major_axis;
+    Eigen::Vector3f centroid;
+    bool found_object = true; //should verify this
+    double coke_height = 0.124;
+    //hard-coded search bounds based on a coke of height 0.124
+    found_object = pclUtils_.find_plane_fit(0.4, 1, -0.5, 0.5, surface_height + 0.114, surface_height + 0.134, 0.001,
+            plane_normal, plane_dist, major_axis, centroid);
+    if (plane_normal(2) < 0) plane_normal(2) *= -1.0; //in world frame, normal must point UP
+
+    object_pose.header.frame_id = "base_link";
+    object_pose.pose.position.x = centroid(0);
+    object_pose.pose.position.y = centroid(1);
+    //the COKE_CAN_UPRIGHT model has its origin in the middle of the coke, not the top surface
+    //so lower the coke model origin by half the coke height from upper surface
+    object_pose.pose.position.z = centroid(2)-0.5*coke_height;
+    // No specified rotation is needed for an upright cylinder
     object_pose.pose.orientation.x = 0;
     object_pose.pose.orientation.y = 0;
     object_pose.pose.orientation.z = 0;
     object_pose.pose.orientation.w = 1;
-    return found_object;
 
+    return found_object;
 }
 
 bool ObjectFinder::find_toy_block(float surface_height, geometry_msgs::PoseStamped &object_pose) {

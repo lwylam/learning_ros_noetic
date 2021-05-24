@@ -95,8 +95,8 @@ int main(int argc, char** argv) {
     object_finder_goal.known_surface_ht = true;
     object_finder_goal.surface_ht = surface_height;
     ROS_INFO("using surface ht = %f",surface_height);        
-    object_finder_goal.object_id=ObjectIdCodes::TOY_BLOCK_ID;
-     ROS_INFO("sending goal to find TOY_BLOCK: ");
+    object_finder_goal.object_id=ObjectIdCodes::COKE_CAN_UPRIGHT;
+     ROS_INFO("sending goal to find COKE_CAN_UPRIGHT: ");
         object_finder_ac.sendGoal(object_finder_goal,&objectFinderDoneCb); 
         
         finished_before_timeout = object_finder_ac.waitForResult(ros::Duration(10.0));
