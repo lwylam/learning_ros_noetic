@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
 <!-- startup Gazebo in an empty world -->
 <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
@@ -8,8 +9,8 @@
 <!-- add tables and blocks -->
    <include file="$(find exmpl_models)/launch/add_table.launch"> </include>
    <include file="$(find exmpl_models)/launch/add_table2.launch"> </include>
-   <include file="$(find exmpl_models)/launch/add_toy_block.launch"> </include>
-   <include file="$(find exmpl_models)/launch/add_toy_block2.launch"> </include>
+   <include file="$(find exmpl_models)/launch/add_coke_can.launch"> </include>
+   <include file="$(find exmpl_models)/launch/add_coke_can2.launch"> </include>
 
 <!-- Convert an xacro and put on parameter server -->
   <!-- These arguments load the electric grippers, for example left_electric_gripper:=true -->
@@ -32,7 +33,9 @@
   <param name="rethink/software_version" value="1.2.0" />  
 
   <node pkg="tf" type="static_transform_publisher" name="kinect_broadcaster" args="0 0 0 -0.500 0.500 -0.500 0.500 kinect_link kinect_depth_frame 100" />
-  <node pkg="tf" type="static_transform_publisher" name="kinect_broadcaster2" args="0 0 0 -0.500 0.500 -0.500 0.500 kinect_link kinect_pc_frame 100" />  
-
+  <node pkg="tf" type="static_transform_publisher" name="kinect_broadcaster2" args="0 0 0 -0.500 0.500 -0.500 0.500 kinect_link kinect_pc_frame 100" />
+  
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="kinect_broadcaster" args="0 0 0 -1.5708 0 -1.5708   camera_link kinect_depth_frame" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="kinect_broadcaster2" args="0 0 0 -0.5 0.5 -0.5 0.5 kinect_link kinect_pc_frame" /> -->
 
 </launch>
