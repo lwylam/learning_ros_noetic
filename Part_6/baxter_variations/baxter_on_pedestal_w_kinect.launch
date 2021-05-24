@@ -1,10 +1,11 @@
+<?xml version="1.0"?>
 <launch>
 <!-- Convert an xacro and put on parameter server -->
   <!-- These arguments load the electric grippers, for example left_electric_gripper:=true -->
   <arg name="left_electric_gripper" default="true"/>
   <arg name="right_electric_gripper" default="true"/>
   
-<param name="robot_description" command="$(find xacro)/xacro.py --inorder '$(find baxter_variations)/baxter_on_pedestal.xacro' gazebo:=true" />
+<param name="robot_description" command="$(find xacro)/xacro --inorder '$(find baxter_variations)/baxter_on_pedestal.xacro' gazebo:=true" />
 
 <!-- Spawn a robot into Gazebo -->
 <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model baxter_on_pedestal" />
